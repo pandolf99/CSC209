@@ -7,7 +7,7 @@ int main(void) {
   int d;
   int error = 0;
   scanf("%s",phone);
-  while(scanf("%d", &d) == 1) {
+  while(scanf("%d", &d) != EOF) {
     if (d <= 9 && d >= 0) {
       char cd;
       cd = phone[d];
