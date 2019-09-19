@@ -7,6 +7,13 @@
  */
 int sum_card(int **score_card, int size) {
     // TODO: write the body of sum_card according to its description.
+
+    int total = 0;
+    for (int i = 0; i < size; i++) {
+      total += **score_card;
+      score_card += 1;
+    }
+    return total;
 }
 
 
@@ -17,6 +24,7 @@ int sum_card(int **score_card, int size) {
  * $ ./score_card 10 -3
  * Sum: 7
  */
+
 int main(int argc, char **argv) {
     int size = argc - 1;
     int *score_card[size];
