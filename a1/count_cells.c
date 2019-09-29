@@ -7,6 +7,8 @@ void read_image(int num_rows, int num_cols,
 
 void print_image(int num_rows, int num_cols, int arr[num_rows][num_cols]);
 
+void count_cells(int num_rows, int num_cols, int arr[num_rows][num_cols]);
+
 // Remember to include the function prototype for count_cells
 
 
@@ -30,7 +32,8 @@ int main(int argc, char **argv) {
     read_image(height, width, arr, f);
     // Check for second parameter
     if (argc == 3 && strcmp(argv[2], "-p") == 0) {
-      print_image(height, width, arr);
-    }
+       print_image(height, width, arr);
+     }
+    count_cells(height, width, arr);
     return 0;
 }
