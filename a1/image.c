@@ -59,7 +59,7 @@ int *checkbounds(int num_rows, int num_cols, int i, int j) {
   if (j + 1 < num_cols) r = 1;
   else r = 0;
 
-  if (j - 1 <= 0) l = 1;
+  if (j - 1 >= 0) l = 1;
   else l = 0;
 
   int *a = malloc(sizeof(int)*4);
