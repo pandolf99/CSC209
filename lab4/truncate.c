@@ -12,6 +12,15 @@
     the string "fun" and returns 5.
 */
 
+int truncate(char *str, int n) {
+  if (strlen(str) <= n) {
+    return 0;
+  }
+  int trunc_n = strlen(str) - n;
+  str[n] ='\0';
+  return trunc_n;
+}
+
 
 
 int main(int argc, char **argv) {
