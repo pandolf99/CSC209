@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     if (((argc - 1) < 1) || ((argc - 1) > 2) ||
     (argc == 3 && strcmp(argv[2], "-p") != 0)) {
       fprintf(stderr, "Usage: count_cells <imagefile.txt> [-p] \n");
-      return 1;
+      exit(1);
     }
 
     // Declare important variables and get size
