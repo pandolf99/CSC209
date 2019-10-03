@@ -7,7 +7,7 @@ void read_image(int num_rows, int num_cols,
 
 void print_image(int num_rows, int num_cols, int arr[num_rows][num_cols]);
 
-void count_cells(int num_rows, int num_cols, int arr[num_rows][num_cols]);
+int count_cells(int num_rows, int num_cols, int arr[num_rows][num_cols]);
 
 // Remember to include the function prototype for count_cells
 
@@ -30,10 +30,12 @@ int main(int argc, char **argv) {
     int arr[height][width];
 
     read_image(height, width, arr, f);
+    int count;
+    count = count_cells(height, width, arr);
     // Check for second parameter
     if (argc == 3 && strcmp(argv[2], "-p") == 0) {
        print_image(height, width, arr);
      }
-    count_cells(height, width, arr);
+    printf("Number of Cells is %d\n", count);
     return 0;
 }

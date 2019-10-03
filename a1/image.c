@@ -90,7 +90,7 @@ void delete_cell(int i, int j, int row_n, int col_n, int arr[row_n][col_n])
 
 }
 
-void count_cells(int num_rows, int num_cols, int arr[num_rows][num_cols]) {
+int count_cells(int num_rows, int num_cols, int arr[num_rows][num_cols]) {
   int count = 0;
   for (int i = 0; i < num_rows; i++) {
     for (int j = 0; j < num_cols; j++){
@@ -100,5 +100,5 @@ void count_cells(int num_rows, int num_cols, int arr[num_rows][num_cols]) {
       }
     }
   }
-  printf("Number of Cells is %d\n", count);
+  return count;
 }
