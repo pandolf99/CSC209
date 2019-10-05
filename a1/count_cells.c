@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
     if (argc == 3 && strcmp(argv[2], "-p") == 0) {
        print_image(height, width, arr);
      }
+    fclose(f);
     printf("Number of Cells is %d\n", count);
     return 0;
 }
