@@ -79,16 +79,13 @@ void *smalloc(unsigned int nbytes) {
 
 
   struct block *curr_node = freelist;
-  if (curr_node == NULL) {
-    return NULL;
-  }
   //Find available memory in free List
-  while (curr_node->next != NULL) {
+  while (curr_node != NULL) {
     if (curr_node->size >= nbytes) break;
     else curr_node = curr_node->next;
   }
   // Check if there is no available memory
-  if (curr_node->next == NULL && curr_node->size < nbytes) {
+  if (curr_node == NULL) {
     return NULL;
   }
   //cases for when it finds memory.
@@ -119,7 +116,13 @@ int sfree(void *addr) {
   while (cn->addr != addr) {
     cn = cn->next;
   }
+  //check if inputted addr is not in allocated_list
+  if (cn == NULL) {
+    return -1;
+  }
   remove_n(&allocated_list, cn);
+
+  //find right node in freelist where cn is going to be inserted.
   struct block *good_n = find_right(cn->addr);
 
   //Check if neccessary to prepend.
