@@ -12,10 +12,18 @@ extern struct block *freelist;
 
 /* Prints each element of the list using the format string given below:*/
 void print_list(struct block *list) {
-
-   //printf("    [addr: %p, size: %d]\n", , );
-
-    printf("\n");
+  if (list == NULL) {
+      printf("\n");
+      return;
+  }
+  struct block *curr = list;
+  while (curr->next != NULL) {
+    printf("    [addr: %p, size: %d]\n",curr->addr,curr->size);
+    curr = curr->next;
+  }
+  // Print last element.
+  printf("    [addr: %p, size: %d]\n",curr->addr,curr->size);
+  printf("\n");
 }
 
 void print_allocated(void) {
@@ -38,10 +46,10 @@ void write_to_mem(int size, char *ptr, char value) {
  * hexadecimal digits. */
 void print_mem(void) {
     struct block *cur = allocated_list;
-    
+
     while(cur != NULL) {
         printf("%p: size = %d\n", cur->addr, cur->size);
-        
+
         /* print 16 bytes per line */
         int i, j;
         for(i = 0; i < cur->size / 8; i++){
