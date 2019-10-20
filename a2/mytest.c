@@ -21,7 +21,7 @@ order is used to make sure that freelist is always ordered regardless of what
 order is allocated_list freed.
 
 The examiner should be able to see that freelist is always ordered through the
-print messages. 
+print messages.
 */
 
 
@@ -57,12 +57,6 @@ int main(void) {
     *arr[i] = i + 5;
   }
 
-  //Test calling smalloc when empty freelist
-  void *try = smalloc(sizeof(int));
-  if (try == NULL) {
-    printf("Tried to call smalloc when no memory was available.\n");
-  }
-
   printf("List of allocated blocks:\n");
   print_allocated();
   printf("List of free blocks:\n");
@@ -70,6 +64,11 @@ int main(void) {
   printf("Contents of allocated memory:\n");
   print_mem();
 
+  //Test calling smalloc when empty freelist
+  void *try = smalloc(sizeof(int));
+  if (try == NULL) {
+    printf("Tried to call smalloc when no memory was available.\n");
+  }
 
   //Generate a random permutation of the 10 indices.
   int indices[10] = {0,1,2,3,4,5,6,7,8,9};

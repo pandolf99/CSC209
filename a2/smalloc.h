@@ -55,7 +55,7 @@ inserts a new block at the beginning of list, with relevant data.
 void prepend_new(struct block **l, void *addr, int s);
 
 /*
-inserts an existing unitary block to the beggining of l.
+inserts an existing unitary (next == NULL) block to the beggining of l.
 */
 void prepend_ex(struct block **l, struct block *cn);
 

@@ -17,12 +17,10 @@ void print_list(struct block *list) {
       return;
   }
   struct block *curr = list;
-  while (curr->next != NULL) {
+  while (curr != NULL) {
     printf("    [addr: %p, size: %d]\n",curr->addr,curr->size);
     curr = curr->next;
   }
-  // Print last element.
-  printf("    [addr: %p, size: %d]\n",curr->addr,curr->size);
   printf("\n");
 }
 
