@@ -89,5 +89,5 @@ int main(void) {
   print_mem();
 
   mem_clean();
-  return 1;
+  return 0;
 }

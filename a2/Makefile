@@ -3,6 +3,8 @@
 all : simpletest
 
 tests: simpletest mytest
+	./simpletest
+	./mytest
 
 # The target in this rule is the executable file name. The executable file
 # depends on the three object files which are compiled separately using the
