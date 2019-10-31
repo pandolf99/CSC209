@@ -55,8 +55,8 @@ int main(void) {
     //close reading
     close(fd[0]);
     //write into the pipe the values
-    write(fd[1], user_id, MAXLINE);
-    write(fd[1], password, MAXLINE);
+    write(fd[1], user_id, 10);
+    write(fd[1], password, 10);
 
     //Wait for status
     int status;
