@@ -40,11 +40,13 @@ int main(void) {
 
   //If its a child, run validate
   if (r ==  0) {
+    close(fd[1]);
     //Change stdin so that it reads from pipe.
     if ((dup2(fd[0], fileno(stdin))) == -1) {
         perror("dup2");
         exit(1);
     }
+    close(fd[0]);
     //Run validate
     execl("./validate", "validate", NULL);
     printf("Something bad happened");
@@ -71,6 +73,7 @@ int main(void) {
     else {
       exit(1);
     }
+    close(fd[1]);
     if (print_code == 0) {
       printf("%s\n", SUCCESS);
     }
@@ -82,6 +85,9 @@ int main(void) {
     }
     else if (print_code == 3) {
       printf("%s\n", NO_USER);
+    }
+    else {
+      exit(print_code);
     }
     return 0;
   }
