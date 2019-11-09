@@ -1,12 +1,12 @@
 
 #define MAXLINE 256
 
-/* A line from a makefile is either a target line, an action line, 
+/* A line from a makefile is either a target line, an action line,
 or a comment or line to ignore
      "target" line
-        - Starts with a target, followed by a colon followed by a 
+        - Starts with a target, followed by a colon followed by a
         space-separated list of dependencies
-        - A target is a word that follows the Rule of valid file names  
+        - A target is a word that follows the Rule of valid file names
         (assume that only valid file names are used in testing)
         - The colon has a space on either side of it
         - assume the line will not exceed MAXLINE
@@ -16,12 +16,12 @@ or a comment or line to ignore
         - Begins with a tab
         - Contains a line that can be executed. First word is the relative path
         to the executable, remaining tokens are argument to the executable.
-        - relative path means that if the executable is in the current working 
+        - relative path means that if the executable is in the current working
         directory, the path begins with "./" (Do not assume "." is in the path)
-     
+
      Comment or empty line
         - contains only spaces and/or tabs
-        - contains 0 or more spaces or tabs followed by a '#'.  Any other 
+        - contains 0 or more spaces or tabs followed by a '#'.  Any other
           characters after the '#' are ignored.
  */
 
@@ -71,3 +71,13 @@ char *args_to_string(char **args, char *buffer, int size);
  */
 void run_make(char *target, Rule *rules, int pflag);
 
+/*
+Returns how many dependencies are in a target line.
+*/
+int count_deps(char *line);
+
+/*
+Return an array of strings where the first element is a target and the rest of
+the array are the name of the dependencies. Last element is null.
+*/
+char **parse_targ(char *line);

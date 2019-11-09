@@ -9,7 +9,7 @@
 #include "pmake.h"
 
 /* This program reads and evaluates a Makefile very much like the program make
-   but with some simplifications, and the option to evaluate dependencies in 
+   but with some simplifications, and the option to evaluate dependencies in
    parallel.
 
    Options:
@@ -39,6 +39,7 @@ int main(int argc, char **argv) {
             break;
         case 'f':
             filename = optarg;
+            break;
         default: /* '?' */
             fprintf(stderr, "Usage: %s [-op][-f <filename>] [target]\n", argv[0]);
             exit(EXIT_FAILURE);
@@ -58,7 +59,7 @@ int main(int argc, char **argv) {
     }
 
     run_make(target, rules, parallel);
-    
+
     fclose(fp);
 
     return 0;
