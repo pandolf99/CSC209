@@ -65,6 +65,7 @@ void execute_fork(Action *ac) {
     }
     if (WIFEXITED(status) == 1) {
       if (WEXITSTATUS(status) != 0) {
+        fprintf(stderr, "Something went wrong when executing action");
         exit(1);
       }
     }
@@ -84,8 +85,8 @@ void run_make(char *target, Rule *rules, int pflag) {
       cur_r = cur_r->next_rule;
       //If target is not found in rules return;
       if (cur_r == NULL)  {
-        fprintf(stderr, "Not a valid target");
-        return;
+        fprintf(stderr, "Not a valid target\n");
+        exit(1);
       }
     }
     //Check if it does not exist.
@@ -99,6 +100,7 @@ void run_make(char *target, Rule *rules, int pflag) {
       run_make(cur_d->rule->target, rules, pflag);
       cur_d = cur_d->next_dep;
       }
+      //Parallelize
       else {
         r = fork();
         if (r == 0) {
@@ -110,8 +112,8 @@ void run_make(char *target, Rule *rules, int pflag) {
         }
       }
     }
-    //Parent waits for all children.
-    if (r > 0) {
+    //Parent waits for all children if running in parallel.
+    if (r > 0 && pflag) {
       cur_d = cur_r->dependencies;
       while (cur_d != NULL) {
         int status;
@@ -121,6 +123,7 @@ void run_make(char *target, Rule *rules, int pflag) {
         }
         if (WIFEXITED(status) == 1) {
           if (WEXITSTATUS(status) != 0) {
+            fprintf(stderr, "Something went wrong when updating dependencies");
             exit(1);
           }
         }

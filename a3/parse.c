@@ -91,10 +91,11 @@ void set_targ(char *targ, Rule *rule) {
 }
 /*
 Set the dependencies for rule.
-Create rules for each dependency and links them to the end of rule struct.
+Create rules for each dependency and links them to the end of rule struct if
+there is not a rule for that dependecy already.
 New rule has target initialized.
 */
-void set_deps(char **targ, Rule *rule) {
+void set_deps(char **targ, Rule *rule, Rule *r_h) {
   if (targ[1] == NULL) {
     return;
   }
@@ -103,13 +104,21 @@ void set_deps(char **targ, Rule *rule) {
   cur_r->dependencies = malloc(sizeof(Dependency));
   Dependency *cur_r_d = cur_r->dependencies;
   while (targ[i] !=  NULL) {
-    cur_r_d->rule = malloc(sizeof(Rule));
-    set_targ(targ[i], cur_r_d->rule);
-    append_rule(cur_r_d->rule, rule);
+    //Check if it already exists.
+    Rule *pot_r = t_in_r(targ[i], r_h);
+    if (pot_r != NULL) {
+      cur_r_d->rule = pot_r;
+    }
+    else {
+      cur_r_d->rule = malloc(sizeof(Rule));
+      set_targ(targ[i], cur_r_d->rule);
+      append_rule(cur_r_d->rule, rule);
+    }
     if (targ[i+1] != NULL) {
       cur_r_d->next_dep = malloc(sizeof(Dependency));
       cur_r_d = cur_r_d->next_dep;
     }
+    free(targ[i]);
     i++;
   }
 }
@@ -155,10 +164,10 @@ Rule *parse_file(FILE *fp) {
     }
     //If it is a target.
     else if (isalpha(line[0])) {
-      char** targ_arr = parse_targ(line); //Need to free this.
+      char** targ_arr = parse_targ(line);
       if (cur_r == r_h) {
         set_targ(targ_arr[0], cur_r);
-        set_deps(targ_arr, cur_r);
+        set_deps(targ_arr, cur_r, r_h);
         cur_r = cur_r->next_rule;
         continue;
       }
@@ -168,12 +177,12 @@ Rule *parse_file(FILE *fp) {
       if (cur_r == NULL) {
         cur_r = malloc(sizeof(Rule));
         set_targ(targ_arr[0], cur_r);
-        set_deps(targ_arr, cur_r);
+        set_deps(targ_arr, cur_r, r_h);
         append_rule(cur_r, r_h);
         continue;
       }
       else {
-        set_deps(targ_arr, cur_r);
+        set_deps(targ_arr, cur_r, r_h);
         continue;
       }
     }
