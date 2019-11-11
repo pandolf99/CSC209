@@ -11,8 +11,17 @@
 
 
 /*
-Free all the memory used by the rule struct.
+Function to free all the memory used by the rule struct.
 */
+
+void free_args(char **args) {
+  int i = 0;
+  while(args[i] != NULL) {
+    free(args[i]);
+    i++;
+  }
+  free(args);
+}
 
 void free_acs(Action *act) {
   if (act == NULL) {
@@ -20,24 +29,12 @@ void free_acs(Action *act) {
     return;
   }
   if (act->next_act == NULL) {
-    char **args = act->args;
-    int i = 0;
-    while(args[i] != NULL) {
-      free(args[i]);
-      i++;
-    }
-    free(args);
+    free_args(act->args);
     free(act);
   }
   else {
     free_acs(act->next_act);
-    char **args = act->args;
-    int i = 0;
-    while(args[i] != NULL) {
-      free(args[i]);
-      i++;
-    }
-    free(args);
+    free_args(act->args);
     free(act);
   }
 }

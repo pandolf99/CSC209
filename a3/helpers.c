@@ -103,7 +103,8 @@ char **parse_targ(char *line) {
   char *tok = strtok(line, " ");
   int  i = 0;
   while(tok != NULL) {
-    if (strcmp(tok, ":") != 0) {
+    char *s = strchr(tok, ':');
+    if (s == NULL) {
       arr[i] = malloc(sizeof(char)*strlen(tok) + 1);
       strncpy(arr[i], tok, strlen(tok) + 1);
       //Remove new_line character at end

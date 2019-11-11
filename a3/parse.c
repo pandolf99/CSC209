@@ -83,6 +83,18 @@ Rule *t_in_r(char *t, Rule *rules) {
 }
 
 /*
+Initializes a rule to Null values.
+Mainly to avoid memory errors. Should be called after memory is allocated for
+a rule.
+*/
+void init_null(Rule *r) {
+  r->dependencies = NULL;
+  r->target = NULL;
+  r->actions = NULL;
+  r->next_rule = NULL;
+}
+
+/*
 Sets the target for rule.
 */
 void set_targ(char *targ, Rule *rule) {
@@ -112,6 +124,7 @@ void set_deps(char **targ, Rule *rule, Rule *r_h) {
     //Else create a new rule
     else {
       cur_r_d->rule = malloc(sizeof(Rule));
+      init_null(cur_r_d->rule);
       set_targ(targ[i], cur_r_d->rule);
       append_rule(cur_r_d->rule, rule);
     }
@@ -163,18 +176,21 @@ void set_act(char *line, Rule* rule) {
 Rule *parse_file(FILE *fp) {
   char line[MAXLINE];
   Rule *r_h = malloc(sizeof(Rule));
+  init_null(r_h);
   Rule *cur_r = r_h;
+  char** targ_arr;
   while (fgets(line, MAXLINE, fp) != NULL) {
     if (is_comment_or_empty(line)) {
       continue;
     }
     //If it is a target.
     else if (isalpha(line[0])) {
-      char** targ_arr = parse_targ(line);
+      targ_arr = parse_targ(line);
       if (cur_r == r_h) {
         set_targ(targ_arr[0], cur_r);
         free(targ_arr[0]);
         set_deps(targ_arr, cur_r, r_h);
+        free(targ_arr);
         cur_r = cur_r->next_rule;
         continue;
       }
@@ -183,15 +199,17 @@ Rule *parse_file(FILE *fp) {
       //If it is a new rule
       if (cur_r == NULL) {
         cur_r = malloc(sizeof(Rule));
+        init_null(cur_r);
         set_targ(targ_arr[0], cur_r);
-        free(targ_arr[0]);
         set_deps(targ_arr, cur_r, r_h);
         append_rule(cur_r, r_h);
       }
+      //If it is an existing rule, just set deps. 
       else {
-        free(targ_arr[0]);
         set_deps(targ_arr, cur_r, r_h);
       }
+      free(targ_arr[0]);
+      free(targ_arr);
     }
     else {
       set_act(line, cur_r);

@@ -65,7 +65,7 @@ void execute_fork(Action *ac) {
     }
     if (WIFEXITED(status) == 1) {
       if (WEXITSTATUS(status) != 0) {
-        fprintf(stderr, "Something went wrong when executing action");
+        fprintf(stderr, "Something went wrong when executing action\n");
         exit(1);
       }
     }
@@ -94,7 +94,7 @@ void run_make(char *target, Rule *rules, int pflag) {
     int exist = stat(cur_r->target, &temp);
     //Update dependencies
     Dependency *cur_d = cur_r->dependencies;
-    int r;
+    int r = -1;
     while(cur_d != NULL) {
       if(!pflag) {
       run_make(cur_d->rule->target, rules, pflag);
@@ -123,7 +123,7 @@ void run_make(char *target, Rule *rules, int pflag) {
         }
         if (WIFEXITED(status) == 1) {
           if (WEXITSTATUS(status) != 0) {
-            fprintf(stderr, "Something went wrong when updating dependencies");
+            fprintf(stderr, "Something went wrong when updating dependencies\n");
             exit(1);
           }
         }
