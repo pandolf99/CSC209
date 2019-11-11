@@ -86,8 +86,8 @@ Rule *t_in_r(char *t, Rule *rules) {
 Sets the target for rule.
 */
 void set_targ(char *targ, Rule *rule) {
-  rule->target = malloc(sizeof(char)*sizeof(targ));
-  strcpy(rule->target, targ);
+  rule->target = malloc(sizeof(char)*strlen(targ)+1);
+  strncpy(rule->target, targ, strlen(targ)+1);
 }
 /*
 Set the dependencies for rule.
@@ -109,6 +109,7 @@ void set_deps(char **targ, Rule *rule, Rule *r_h) {
     if (pot_r != NULL) {
       cur_r_d->rule = pot_r;
     }
+    //Else create a new rule
     else {
       cur_r_d->rule = malloc(sizeof(Rule));
       set_targ(targ[i], cur_r_d->rule);
@@ -118,9 +119,13 @@ void set_deps(char **targ, Rule *rule, Rule *r_h) {
       cur_r_d->next_dep = malloc(sizeof(Dependency));
       cur_r_d = cur_r_d->next_dep;
     }
+    else {
+      cur_r_d->next_dep = NULL;
+    }
     free(targ[i]);
     i++;
   }
+  free(targ[i]);
 }
 
 /*
@@ -128,6 +133,7 @@ Set an action for rule.
 */
 void set_act(char *line, Rule* rule) {
   Action *ac = malloc(sizeof(Action));
+  ac->next_act = NULL;
   ac->args = build_args(line);
   //If it is first rule
   if (rule->actions == NULL) {
@@ -167,6 +173,7 @@ Rule *parse_file(FILE *fp) {
       char** targ_arr = parse_targ(line);
       if (cur_r == r_h) {
         set_targ(targ_arr[0], cur_r);
+        free(targ_arr[0]);
         set_deps(targ_arr, cur_r, r_h);
         cur_r = cur_r->next_rule;
         continue;
@@ -177,13 +184,13 @@ Rule *parse_file(FILE *fp) {
       if (cur_r == NULL) {
         cur_r = malloc(sizeof(Rule));
         set_targ(targ_arr[0], cur_r);
+        free(targ_arr[0]);
         set_deps(targ_arr, cur_r, r_h);
         append_rule(cur_r, r_h);
-        continue;
       }
       else {
+        free(targ_arr[0]);
         set_deps(targ_arr, cur_r, r_h);
-        continue;
       }
     }
     else {

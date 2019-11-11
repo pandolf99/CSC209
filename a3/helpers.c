@@ -27,8 +27,8 @@ char **build_args(char *line) {
   char *tok = strtok(line, " ");
   int i = 0;
   while(tok != NULL) {
-    args[i] = malloc(sizeof(char)*sizeof(tok));
-    strcpy(args[i], tok);
+    args[i] = malloc(sizeof(char)*strlen(tok) + 1);
+    strncpy(args[i], tok, strlen(tok) + 1);
     //Remove new_line character at end
     if (strchr(args[i], '\n') != NULL) {
       args[i][strlen(tok) - 1] = '\0';
@@ -76,16 +76,15 @@ char *args_to_string(char **args, char *buffer, int size) {
     return buffer;
 }
 
-/*
-Returns how many dependencies are in a target line.
-*/
-int count_deps(char *line) {
-  char *deps = strchr(line, ':');
+int count_targ_l(char* line) {
   int count = 0;
-  for (int i = 0; i < strlen(deps); i++) {
-    if (deps[i] == ' ' && isalpha(deps[i+1])) {
-      count++;
+  char *tok = strtok(line, " ");
+  while(tok != NULL) {
+    char *s = strchr(tok, ':');
+    if (s == NULL) {
+      count += 1;
     }
+    tok = strtok(NULL, " ");
   }
   return count;
 }
@@ -95,30 +94,27 @@ Return an array of strings where the first element is a target and the rest of
 the array are the name of the dependencies. Last element is null.
 */
 char **parse_targ(char *line) {
-  //Make sure it has dependendencies.
-  int n_deps = count_deps(line);
-  //Create array of right size;
-  char **arr = malloc(sizeof(char*)*(n_deps + 2));
-  //Parse the target.
-  char *dep_l = strchr(line, ' ');
-  int targ_s = strlen(line) - strlen(dep_l);
-  arr[0] = malloc(sizeof(char)*targ_s + 1);
-  strncpy(arr[0], line, targ_s);
-  arr[0][targ_s] = '\0';
   //Parse dependencies by token
-  dep_l += 3;
-  char *tok = strtok(dep_l, " ");
-  int i = 1;
+  char *line_2 = malloc(sizeof(char)*strlen(line) +1);
+  strcpy(line_2, line);
+  int n_deps = count_targ_l(line_2);
+  free(line_2);
+  char **arr = malloc(sizeof(char*)*(n_deps + 1));
+  char *tok = strtok(line, " ");
+  int  i = 0;
   while(tok != NULL) {
-    arr[i] = malloc(sizeof(char)*sizeof(tok));
-    strcpy(arr[i], tok);
-    //Remove new_line character at end
-    if (strchr(arr[i], '\n') != NULL) {
-      arr[i][strlen(tok) - 1] = '\0';
+    if (strcmp(tok, ":") != 0) {
+      arr[i] = malloc(sizeof(char)*strlen(tok) + 1);
+      strncpy(arr[i], tok, strlen(tok) + 1);
+      //Remove new_line character at end
+      char *c;
+      if ((c = strchr(arr[i], '\n')) != NULL) {
+        *c = '\0';
+      }
+      i++;
     }
     tok = strtok(NULL, " ");
-    i++;
   }
-  arr[n_deps+1] = NULL;
+  arr[n_deps] = NULL;
   return arr;
 }

@@ -8,6 +8,76 @@
 
 #include "pmake.h"
 
+
+
+/*
+Free all the memory used by the rule struct.
+*/
+
+void free_acs(Action *act) {
+  if (act == NULL) {
+    free(act);
+    return;
+  }
+  if (act->next_act == NULL) {
+    char **args = act->args;
+    int i = 0;
+    while(args[i] != NULL) {
+      free(args[i]);
+      i++;
+    }
+    free(args);
+    free(act);
+  }
+  else {
+    free_acs(act->next_act);
+    char **args = act->args;
+    int i = 0;
+    while(args[i] != NULL) {
+      free(args[i]);
+      i++;
+    }
+    free(args);
+    free(act);
+  }
+}
+
+void free_ds(Dependency *d) {
+  if (d == NULL) {
+    free(d);
+    return;
+  }
+  if (d->next_dep == NULL) {
+    free(d);
+  }
+  else {
+    free_ds(d->next_dep);
+    free(d);
+  }
+}
+
+void free_r(Rule *r) {
+  free(r->target);
+  free_ds(r->dependencies);
+  free_acs(r->actions);
+  free(r);
+}
+
+void free_l(Rule *r) {
+  if (r == NULL) {
+    free(r);
+    return;
+  }
+  if (r->next_rule == NULL) {
+    free_r(r);
+  }
+  else {
+    free_l(r->next_rule);
+    free_r(r);
+  }
+}
+
+
 /* This program reads and evaluates a Makefile very much like the program make
    but with some simplifications, and the option to evaluate dependencies in
    parallel.
@@ -59,6 +129,8 @@ int main(int argc, char **argv) {
     }
 
     run_make(target, rules, parallel);
+
+    free_l(rules);
 
     fclose(fp);
 
