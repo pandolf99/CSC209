@@ -20,7 +20,7 @@ long num_reads, seconds;
 Signal handler for SIFPROF
 */
 void sigprof_hand(int sig) {
-  printf("Cought signal SIGPROF\n");
+  printf(MESSAGE, num_reads, seconds);
   exit(0);
 }
 
@@ -59,12 +59,14 @@ int main(int argc, char **argv) {
      * and print it to stderr.
      */
     srand(time(NULL));
+    num_reads = 0;
     setitimer(ITIMER_PROF, &t, NULL);
     for (;;) {
       int r = rand() % 100;
       fseek(fp, sizeof(int)*r, SEEK_SET);
       int i;
       fread(&i, sizeof(int), 1, fp);
+      num_reads += 1;
       printf("%d\n", i);
     }
     return 1; // something is wrong if we ever get here!
