@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 //Return the value of the number that starts at index i from str.
@@ -23,7 +24,7 @@ void read_image(int num_rows, int num_cols,
                   for (int i = 0; i < num_rows; i++) {
                     // Max size of line is if all numbers are of 3 digits
                     char *line = malloc(sizeof(char)*(2*num_cols*3));
-                    fscanf(fp, "%[^\n]\n", line);
+                    fgets(line, (2*num_cols*3) + 1, fp);
                     for (int i2 = 0; i2 < num_cols; i2++) {
                       arr[i][i2] = get_val_at_i(i2, line);
                     }
