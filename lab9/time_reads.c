@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
       int i;
       fread(&i, sizeof(int), 1, fp);
       num_reads += 1;
-      //printf("%d\n", i);
+      printf("%d\n", i);
     }
     return 1; // something is wrong if we ever get here!
 }
