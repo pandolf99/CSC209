@@ -68,11 +68,8 @@ int main() {
                 // You want to move the stuff after the full line to the beginning
                 // of the buffer.  A loop can do it, or you can use memmove.
                 // memmove(destination, source, number_of_bytes)
-                inbuf = strlen(buf) + 2 - inbuf;
+                inbuf = inbuf - (strlen(buf) + 2);
                 memmove(buf, buf + where, BUFSIZE);
-                for (int i = inbuf; i < BUFSIZE; i++) {
-                  buf[i] = '\0';
-                }
 
 
             }
