@@ -1,0 +1,169 @@
+Script started on 2019-11-22 09:00:41-0500
+]0;pandolf@DESKTOP-PK2FHVH: /mnt/f/UniFall2019/CSC209/acostaig/lab10[01;32mpandolf@DESKTOP-PK2FHVH[00m:[01;34m/mnt/f/UniFall2019/CSC209/acostaig/lab10[00m$ gdb randclient
+GNU gdb (Ubuntu 8.1-0ubuntu3) 8.1.0.20180409-git
+Copyright (C) 2018 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from randclient...done.
+(gdb) b main
+Breakpoint 1 at 0xc69: file randclient.c, line 24.
+(gdb) r 127.0.0.1
+Starting program: /mnt/f/UniFall2019/CSC209/acostaig/lab10/randclient 127.0.0.1
+
+Breakpoint 1, main (argc=2, argv=0x7ffffffee358) at randclient.c:24
+24	    if (argc != 2) {
+(gdb) n
+29	    int soc = connect_to_server(PORT, argv[1]);
+(gdb) 
+31	    write_random_pieces(soc, MESSAGE, TIMES);
+(gdb) s
+write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:42
+42	void write_random_pieces(int soc, const char *message, int times) {
+(gdb) n
+44	    int message_len = strlen(message);
+(gdb) n
+45	    int total_bytes = times * message_len;
+(gdb) n
+46	    int current_byte = 0;
+(gdb) 
+48	    while (current_byte < total_bytes) {
+(gdb) 
+49	        int piece_size = rand() % (MAXCHARS - MINCHARS + 1) + MINCHARS;
+(gdb) 
+50	        int bytes_left = total_bytes - current_byte;
+(gdb) 
+51	        if (piece_size > bytes_left) {
+(gdb) 
+55	        for (int i = 0; i < piece_size; i++) {
+(gdb) 
+56	            piece[i] = message[(current_byte + i) % message_len];
+(gdb) 
+55	        for (int i = 0; i < piece_size; i++) {
+(gdb) 
+56	            piece[i] = message[(current_byte + i) % message_len];
+(gdb) 
+55	        for (int i = 0; i < piece_size; i++) {
+(gdb) b 59
+Breakpoint 2 at 0x8000db2: file randclient.c, line 59.
+(gdb) c
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) v[Kc
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) c
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) c
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) c
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) 
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) c
+Continuing.
+
+Breakpoint 2, write_random_pieces (soc=3, message=0x80011e0 "A stitch in time\r\n", times=5) at randclient.c:59
+59	        current_byte += piece_size;
+(gdb) c
+Continuing.
+[Inferior 1 (process 500) exited normally]
+(gdb) 
+The program is not being run.
+(gdb) 
+The program is not being run.
+(gdb) quit
+]0;pandolf@DESKTOP-PK2FHVH: /mnt/f/UniFall2019/CSC209/acostaig/lab10[01;32mpandolf@DESKTOP-PK2FHVH[00m:[01;34m/mnt/f/UniFall2019/CSC209/acostaig/lab10[00m$ exit
+exit
+
+Script done on 2019-11-22 09:10:09-0500
