@@ -1,0 +1,12 @@
+Script started on 2019-11-21 21:30:32-0500
+]0;pandolf@DESKTOP-PK2FHVH: /mnt/f/UniFall2019/CSC209/acostaig/lab10[01;32mpandolf@DESKTOP-PK2FHVH[00m:[01;34m/mnt/f/UniFall2019/CSC209/acostaig/lab10[00m$ ./randclient 127.0.0.1
+connect: Connection refused
+]0;pandolf@DESKTOP-PK2FHVH: /mnt/f/UniFall2019/CSC209/acostaig/lab10[01;32mpandolf@DESKTOP-PK2FHVH[00m:[01;34m/mnt/f/UniFall2019/CSC209/acostaig/lab10[00m$ ./randclient 127.0.0.1
+connect: Connection refused
+]0;pandolf@DESKTOP-PK2FHVH: /mnt/f/UniFall2019/CSC209/acostaig/lab10[01;32mpandolf@DESKTOP-PK2FHVH[00m:[01;34m/mnt/f/UniFall2019/CSC209/acostaig/lab10[00m$ ./randclient 127.0.0.1
+]0;pandolf@DESKTOP-PK2FHVH: /mnt/f/UniFall2019/CSC209/acostaig/lab10[01;32mpandolf@DESKTOP-PK2FHVH[00m:[01;34m/mnt/f/UniFall2019/CSC209/acostaig/lab10[00m$ ./randclient 127.0.0.1[C[C
+connect: Connection refused
+]0;pandolf@DESKTOP-PK2FHVH: /mnt/f/UniFall2019/CSC209/acostaig/lab10[01;32mpandolf@DESKTOP-PK2FHVH[00m:[01;34m/mnt/f/UniFall2019/CSC209/acostaig/lab10[00m$ exit
+exit
+
+Script done on 2019-11-21 21:37:48-0500
