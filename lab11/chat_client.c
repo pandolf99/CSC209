@@ -47,24 +47,39 @@ int main(void) {
 
     // Read input from the user, send it to the server, and then accept the
     // echo that returns. Exit when stdin is closed.
+
+    int max_fd = sock_fd;
+    fd_set fds;
+    FD_ZERO(&fds);
+    FD_SET(sock_fd, &fds);
+    FD_SET(STDIN_FILENO, &fds);
     while (1) {
+      fd_set read_fds = fds;
+      int nready = select(max_fd + 1, &read_fds, NULL, NULL, NULL);
+      if (nready == -1) {
+          perror("client: select");
+          exit(1);
+      }
+      if (FD_ISSET(STDIN_FILENO, &read_fds)) {
         int num_read = read(STDIN_FILENO, buf, BUF_SIZE);
         if (num_read == 0) {
             break;
         }
-        buf[num_read] = '\0';         
-		// Should really send '\r\n'
+        buf[num_read] = '\0';
+  	     // Should really send '\r\n'
         int num_written = write(sock_fd, buf, num_read);
         if (num_written != num_read) {
             perror("client: write");
             close(sock_fd);
             exit(1);
         }
-
+      }
+      if (FD_ISSET(sock_fd, &read_fds)) {
         num_read = read(sock_fd, buf, BUF_SIZE);
         buf[num_read] = '\0';
         printf("Received from server: %s", buf);
     }
+  }
 
     close(sock_fd);
     return 0;

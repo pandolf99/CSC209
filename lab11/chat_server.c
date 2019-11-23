@@ -59,8 +59,35 @@ int read_from(int client_index, struct sockname *usernames) {
     char buf[BUF_SIZE + 1];
 
     int num_read = read(fd, &buf, BUF_SIZE);
-    buf[num_read] = '\0'; 
-    if (num_read == 0 || write(fd, buf, strlen(buf)) != strlen(buf)) {
+    buf[num_read] = '\0';
+    // Add the username:
+    if (usernames[client_index].username == NULL) {
+      buf[strlen(buf) - 1] = '\0';
+      usernames[client_index].username = malloc(sizeof(char)*strlen(buf) + 1);
+      strcpy(usernames[client_index].username, buf);
+      return 0;
+    }
+    //Format new message
+    char new_buf[BUF_SIZE + 1];
+    strncpy(new_buf, usernames[client_index].username,
+      strlen(usernames[client_index].username) + 1);
+    strncat(new_buf, ": ", 2);
+    strncat(new_buf, buf, strlen(buf));
+
+    //Write in a loop to toher clients.
+    for (int i = 0; i < MAX_CONNECTIONS; i++) {
+      int curr_fd = usernames[i].sock_fd;
+      if (curr_fd < 0 || curr_fd == fd) {
+        continue;
+      }
+      else {
+        if(write(curr_fd, new_buf, strlen(new_buf)) < 0) {
+          perror("writing to other clients");
+          return 1;
+        }
+      }
+    }
+    if (num_read == 0 || write(fd, new_buf, strlen(new_buf)) != strlen(new_buf)) {
         usernames[client_index].sock_fd = -1;
         return fd;
     }
@@ -132,6 +159,7 @@ int main(void) {
             FD_SET(client_fd, &all_fds);
             printf("Accepted connection\n");
         }
+
 
         // Next, check the clients.
         // NOTE: We could do some tricks with nready to terminate this loop early.
