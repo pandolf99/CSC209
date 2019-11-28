@@ -13,7 +13,7 @@
 #define DESCENT 0.02 //Is used to decrease the temperature as a percentage.
 #define START_VALUE 22  // Starting point for temperature
 
-/* Simulates changes to the temperature sensor device using the 
+/* Simulates changes to the temperature sensor device using the
  * FAN_STATUS message.
  */
 void read_temperature(struct cignal *cig) {
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 	printf("The Cignal Temperature Sensor is now reading...\n\n");
 
 	// Set the initial state of this temperature sensor
-	cig.hdr.device_type = TEMPERATURE; 
+	cig.hdr.device_type = TEMPERATURE;
 	cig.value = START_VALUE; //initial temperature value
 	cig.cooler = OFF;
 	cig.dehumid = OFF;
@@ -58,11 +58,9 @@ int main(int argc, char **argv) {
 	int msgno = 1;
 	// Suppress unuse variable messages.  The next two lines can be removed
 	// before submitting.
-	(void)msgno;
-	(void)cig_serialized;
 
 	while (1) {
-		int peerfd;	
+		int peerfd;
 		if ((peerfd = connect_to_server(port, hostname)) == -1)     {
 			fprintf(stderr, "Error connecting to the gateway!\n");
 			exit(1);
@@ -74,16 +72,42 @@ int main(int argc, char **argv) {
 		 * from the server.
 		 */
 
-		// TODOs
+		 //IF it is the first message send handshake
+		 if (msgno == 1) {
+			 cig.hdr.device_id = -1;
+			 cig.hdr.type = 1;
+			 char *buf = serialize_cignal(cig);
+			 if (write(peerfd, buf, sizeof(char)*CIGLEN) <= 0) {
+				 perror("write in temp sensor");
+			 }
+			 free(buf);
+			 msgno += 1;
+		 }
+		 //Else send an update
+		 else {
+			 cig.hdr.type = 2;
+			 char *buf = serialize_cignal(cig);
+			 if (write(peerfd, buf, sizeof(char)*CIGLEN) <= 0) {
+				 perror("write in temp sensor");
+			 }
+			 free(buf);
+		 }
+		 //When done writing, read from gateway
+		 if (read(peerfd, cig_serialized, sizeof(char)*CIGLEN) <= 0) {
+			 perror("read in temp sensor");
+		 }
+		 unpack_cignal(cig_serialized, &cig);
+		 close(peerfd);
+
 
 		if (sleep(INTERVAL) >= 0) {
 			rawtime = time(NULL);
 			now = localtime(&rawtime);
 			read_temperature(&cig);
-			printf("[%02d:%02d:%02d] Temperature: %.4f\n", 
-					now->tm_hour, 
-					now->tm_min, 
-					now->tm_sec, 
+			printf("[%02d:%02d:%02d] Temperature: %.4f\n",
+					now->tm_hour,
+					now->tm_min,
+					now->tm_sec,
 					cig.value);
 		}
 	}

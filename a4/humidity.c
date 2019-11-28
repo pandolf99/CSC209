@@ -24,7 +24,7 @@ void read_humidity(struct cignal *cig) {
 			cig->value -= DESCENT * cig->value;
 		} else if (cig->dehumid == OFF) {
 			cig->value += ASCENT * cig->value;
-		} 
+		}
 
 	} else {
 		cig->hdr.type = UPDATE;
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
 		if ((peerfd = connect_to_server(port, hostname)) == -1)	{
 			printf("There was an error in connecting to the gateway!\n");
 			exit(1);
-		} 
+		}
 		/* TODO: Complete the while loop
 		 * If this is the first message, then send a handshake message with
 		 * a device id of -1.  If it is a subsequent message, then write
@@ -75,16 +75,41 @@ int main(int argc, char **argv) {
 		 * from the server.
 		 */
 
-		// TODO
+		 //IF it is the first message send handshake
+		 if (msgno == 1) {
+			 cig.hdr.device_id = -1;
+			 cig.hdr.type = 1;
+			 char *buf = serialize_cignal(cig);
+			 if (write(peerfd, buf, sizeof(char)*CIGLEN) <= 0) {
+				 perror("write in humidity sensor");
+			 }
+			 free(buf);
+			 msgno += 1;
+		 }
+		 //Else send an update
+		 else {
+			 cig.hdr.type = 2;
+			 char *buf = serialize_cignal(cig);
+			 if (write(peerfd, buf, sizeof(char)*CIGLEN) <= 0) {
+				 perror("write in humidity sensor");
+			 }
+			 free(buf);
+		 }
+		 //When done writing, read from gateway
+		 if (read(peerfd, cig_serialized, sizeof(char)*CIGLEN) <= 0) {
+			 perror("read in humidity sensor");
+		 }
+		 unpack_cignal(cig_serialized, &cig);
+		 close(peerfd);
 
 		if (sleep(INTERVAL) >= 0) {
 			rawtime = time(NULL);
 			now = localtime(&rawtime);
 			read_humidity(&cig);
-			printf("[%02d:%02d:%02d] Humidity: %.4f\n", 
-					now->tm_hour, 	
-			       now->tm_min, 
-				   now->tm_sec, 
+			printf("[%02d:%02d:%02d] Humidity: %.4f\n",
+					now->tm_hour,
+			       now->tm_min,
+				   now->tm_sec,
 				   cig.value);
 		}
 	}
