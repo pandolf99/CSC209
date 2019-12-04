@@ -99,7 +99,7 @@ int connect_to_server(int port, const char *hostname) {
     int soc = socket(PF_INET, SOCK_STREAM, 0);
     if (soc < 0) {
         perror("socket");
-        exit(1);
+        exit(-1);
     }
     struct sockaddr_in addr;
 
@@ -114,7 +114,7 @@ int connect_to_server(int port, const char *hostname) {
     struct hostent *hp = gethostbyname(hostname);
     if (hp == NULL) {
         fprintf(stderr, "unknown host %s\n", hostname);
-        exit(1);
+        exit(-1);
     }
 
     addr.sin_addr = *((struct in_addr *) hp->h_addr);
@@ -122,9 +122,8 @@ int connect_to_server(int port, const char *hostname) {
     // Request connection to server.
     if (connect(soc, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
         perror("connect");
-        exit(1);
+        exit(-1);
     }
 
     return soc;
 }
-
