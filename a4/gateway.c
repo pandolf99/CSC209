@@ -106,13 +106,13 @@ int main(int argc, char *argv[]){
 				}
 				printf("RAW MESSAGE: %s\n", cig_serialized);
 				unpack_cignal(cig_serialized, &cig);
-				//If it succesfully updated, update message type if necessary. 
+				//If it succesfully updated, update message type if necessary.
 				int success = process_message(&cig, device_record);
 				if (success == 2) {
 					cig.hdr.type = 3;
 				}
 				if (success < 0) {
-					fprintf(stderr, "Could not process a message\n", );
+					fprintf(stderr, "Could not process a message\n");
 					continue;
 				}
 				//create new string with updated cig to write to client.
